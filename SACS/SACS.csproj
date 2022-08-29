@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="RestSharp" Version="108.0.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.1" />
@@ -18,9 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Interfaces">
-      <HintPath>Libraries\Interfaces.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\Interfaces\Interfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>
