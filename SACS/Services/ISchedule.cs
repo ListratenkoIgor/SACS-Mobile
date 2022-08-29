@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Interfaces.Shedule.IisApi;
 using Interfaces.Models;
 using RestSharp;
-using Newtonsoft.Json;
 
 namespace SACS.Services
 {

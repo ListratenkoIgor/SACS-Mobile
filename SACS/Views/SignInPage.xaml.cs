@@ -18,8 +18,8 @@ namespace SACS.Views
             var vm = new SignInViewModel();
             this.BindingContext = vm;
             vm.DisplayError += () => DisplayAlert("Error", vm.Error, "OK");
-            InitializeComponent();
             vm.SuccessLogin += async () => await Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
+            InitializeComponent();
         }
         //buttonclic = vm.SubmitCommand.Execute(null);
     }

@@ -18,6 +18,7 @@ namespace SACS.Views
         {
             InitializeComponent();
             BindingContext = _viewModel = new ScheduleViewModel();
+            _viewModel.DisplayError += () => DisplayAlert("Error", _viewModel.Error, "OK");
             ScheduleListView.ItemsSource = _viewModel.Items;
             ScheduleListView.ItemTemplate = GetDataTemplate();
         }

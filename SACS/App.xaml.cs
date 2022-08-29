@@ -4,7 +4,6 @@ using SACS.Resources;
 using Xamarin.CommunityToolkit.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using AutoMapper;
 
 [assembly: ExportFont("Stick-Regular.ttf", Alias = "Stick")]
 [assembly: ExportFont("OpenSans-Regular.ttf", Alias = "Open Sans")]
@@ -35,8 +34,8 @@ namespace SACS
             var AppData = new AppData();
             DependencyService.RegisterSingleton(AppData);
             var x = DependencyService.Get<AppData>();
-            //MainPage = new AppShell();
-            MainPage = new SignInPage();
+            MainPage = new AppShell();
+            //MainPage = new SignInPage();
         }
 
         protected override void OnStart()

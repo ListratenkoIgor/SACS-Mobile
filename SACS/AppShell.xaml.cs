@@ -14,6 +14,7 @@ namespace SACS
             InitializeComponent();
             Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
             Routing.RegisterRoute(nameof(LessonPage), typeof(LessonPage));
+            CurrentItem = new SignInPage();
         }
 
         private async void OnMenuItemClicked(object sender, EventArgs e)

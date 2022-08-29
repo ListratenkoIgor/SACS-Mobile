@@ -7,7 +7,8 @@ using SACS;
 using Interfaces.Shedule.IisApi;
 using Interfaces.Models;
 using RestSharp;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Xamarin.Forms;
 
 namespace SACS.Services
@@ -20,17 +21,8 @@ namespace SACS.Services
             RestRequest request;
             request = new RestRequest($"data/Students/group/");
             request.AddQueryParameter("groupsNumber", groupsNumber);
-            RestResponse response = await AppData.RestClient.GetAsync(request);
-            if (response.IsSuccessful)
-            {
-                try
-                {
-                    List<StudentDto> result = JsonConvert.DeserializeObject<List<StudentDto>>(response.Content);
-                    return result;
-                }
-                catch { }
-            }
-            return null;
+            var response = AppData.RestClient.Get<List<StudentDto>>(request);
+            return response;
         }
 
         public async Task<StudentsStream> GetStudentsByGroups(List<string> groupsNumbers)
@@ -38,19 +30,10 @@ namespace SACS.Services
             var AppData = DependencyService.Get<AppData>();
             RestRequest request;
             request = new RestRequest($"data/Students/stream");
-            request.AddQueryParameter("groupsNumbers", JsonConvert.SerializeObject(groupsNumbers));
+            request.AddQueryParameter("groupsNumbers", JsonSerializer.Serialize(groupsNumbers));
             request.AddHeader("Authorization", $"Bearer {AppData.token}");
-            RestResponse response = await AppData.RestClient.GetAsync(request);
-            if (response.IsSuccessful)
-            {
-                try
-                {
-                    StudentsStream result = JsonConvert.DeserializeObject<StudentsStream>(response.Content);
-                    return result;
-                }
-                catch { }
-            }
-            return null;
+            var response = AppData.RestClient.Get<StudentsStream>(request);
+            return response;
         }
     }
 }

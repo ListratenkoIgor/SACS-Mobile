@@ -70,7 +70,8 @@ namespace SACS.Services
                     Group = jwtSecurityToken.PayloadExist("Group")?.ToString(),
                     UrlId = jwtSecurityToken.PayloadExist("UrlId")?.ToString()
                 };
-                AppData.Role = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value ;
+                AppData.Role = jwtSecurityToken.PayloadExist("role").ToString();
+                //AppData.Role = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value ;
                 AppData.User = user;
             }
             return string.Empty;

@@ -46,6 +46,8 @@ namespace SACS.ViewModels
             }
             catch (Exception ex)
             {
+                Error = ex.Message;
+                DisplayError();
                 Debug.WriteLine(ex);
             }
             finally

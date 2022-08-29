@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Interfaces.Shedule.IisApi;
 using Interfaces.Models;
 using RestSharp;
-using Newtonsoft.Json;
 using Xamarin.Forms;
 
 namespace SACS.Services
@@ -25,15 +24,19 @@ namespace SACS.Services
                 request = new RestRequest($"schedule/Employees/{user.UrlId}");
             }
             request.AddHeader("Authorization", $"Bearer {AppData.token}");
-            RestResponse response = await AppData.RestClient.GetAsync(request);
-            if (response.IsSuccessful)
+            //if (response.IsSuccessful)
             {
                 try
                 {
+                    var result = AppData.RestClient.Get<ScheduleResponseDto>(request);
+                    return result.GetTodayShedule();
+                    /*
+                    RestResponse response = AppData.RestClient.Get(request);
                     ScheduleResponseDto result = JsonConvert.DeserializeObject<ScheduleResponseDto>(response.Content);
                     return result.GetTodayShedule();
+                    */
                 }
-                catch { }
+                catch { throw; }
             }
             return null;
         }
