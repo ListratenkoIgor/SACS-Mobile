@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SACS.Views.SchedulePage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:SACS.ViewModels"  
+             xmlns:model="clr-namespace:SACS.Models"  
+             x:Name="TodaySchedulePage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Unadd" Command="{Binding LoadItemsCommand}" />
+        <ToolbarItem Text="Add" Command="{Binding LoadItemsCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <RefreshView x:DataType="local:ScheduleViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <CollectionView x:Name="ScheduleListView" SelectionMode="None"/>
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>
