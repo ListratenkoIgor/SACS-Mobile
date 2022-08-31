@@ -1,38 +1,164 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SACS.Views.LessonPage"
-             Title="{Binding Title}"
-             xmlns:local="clr-namespace:SACS.ViewModels"  
-             xmlns:model="clr-namespace:SACS.Models"  
-             x:Name="TodaySchedulePage">
+             xmlns:local="clr-namespace:SACS.ViewModels"
+             xmlns:model="clr-namespace:SACS.Models"             
+             x:Class="SACS.Views.LessonPage">
     <ContentPage.Content>
-        <RefreshView x:DataType="local:ItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-            <CollectionView x:Name="ItemsListView"
-                ItemsSource="{Binding Items}"
-                SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Padding="10" x:DataType="model:Item">
-                            <Label Text="{Binding Text}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="16" />
-                            <Label Text="{Binding Description}" 
-                            LineBreakMode="NoWrap"
-                            Style="{DynamicResource ListItemDetailTextStyle}"
-                            FontSize="13" />
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer 
-                                NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemsViewModel}}, Path=ItemTapped}"		
-                                CommandParameter="{Binding .}">
-                                </TapGestureRecognizer>
-                            </StackLayout.GestureRecognizers>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>
+        <ListView x:Name="LessonListView" BindingContext="local:LessonViewModel">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.RowSpan="3" 
+                               Source="{Binding ImageUrl}" 
+                               Aspect="AspectFill"
+                               HeightRequest="120" 
+                               WidthRequest="100" />
+                        <Label Grid.Column="1" Grid.Row="1" 
+                               Text="{Binding AttendanceTime}" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Row="0"
+                               Grid.Column="2" 
+                               Text="{Binding LasName}" 
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="2" 
+                               Text="{Binding LasName}" 
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="3" 
+                               Text="{Binding MiddleName}" 
+                               VerticalOptions="Center" />
+                        <Switch Grid.Column="3" Grid.Row="1" IsToggled="{Binding IsPresent}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!--
+        <ListView 
+            x:DataType="int:AttendanceStudentDto"
+            x:Name="phonesList"
+              HasUnevenRows="True"
+              GroupDisplayBinding="{Binding Name}"
+              ItemsSource="{Binding Items}"
+              IsGroupingEnabled="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.RowSpan="3" 
+                               Source="{Binding ImageUrl}" 
+                               Aspect="AspectFill"
+                               HeightRequest="120" 
+                               WidthRequest="100" />
+                        <Label Grid.Column="1" Grid.Row="1" 
+                               Text="{Binding AttendanceTime}" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Row="0"
+                               Grid.Column="2" 
+                               Text="{Binding LasName}" 
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="2" 
+                               Text="{Binding LasName}" 
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="3" 
+                               Text="{Binding MiddleName}" 
+                               VerticalOptions="Center" />
+                        <Switch Grid.Column="3" Grid.Row="1" IsToggled="{Binding IsPresent}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <CollectionView x:Name="LessonListView" ItemsSource="{Binding Items}" IsGrouped="true">
+            <CollectionView.GroupHeaderTemplate>
+                
+                <DataTemplate>
+                    <Label Text="1"
+                   BackgroundColor="LightGray"
+                   FontSize="Large"
+                   FontAttributes="Bold" />
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.RowSpan="3" 
+                               Source="{Binding ImageUrl}" 
+                               Aspect="AspectFill"
+                               HeightRequest="120" 
+                               WidthRequest="100" />
+                        <Label Grid.Column="1" Grid.Row="1" 
+                               Text="{Binding AttendanceTime}" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Row="0"
+                               Grid.Column="2" 
+                               Text="{Binding LasName}" 
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="2" 
+                               Text="{Binding LasName}" 
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="3" 
+                               Text="{Binding MiddleName}" 
+                               VerticalOptions="Center" />
+                        <Switch Grid.Column="3" Grid.Row="1" IsToggled="{Binding IsPresent}"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        -->
+
+
+        <!--Custom View Cells-->
+        <!--
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                <ViewCell>
+                    <StackLayout>
+                    <Label Text="{Binding Text}" 
+                            Style="{DynamicResource ListItemTextStyle}" />
+                    <Label Text="{Binding Detail}" 
+                            Style="{DynamicResource ListItemDetailTextStyle}"/>
+                    </StackLayout>
+                </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            -->
     </ContentPage.Content>
 </ContentPage>

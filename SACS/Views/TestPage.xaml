@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SACS.Views.TestPage"
+             xmlns:vm="clr-namespace:SACS.ViewModels">
+
+    <ContentPage.Content>
+        <RefreshView  x:DataType="vm:TestViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <CollectionView ItemsSource="{Binding Plans}" IsGrouped="True">
+                <CollectionView.GroupHeaderTemplate>
+                    <DataTemplate>
+                      
+                    </DataTemplate>
+                        
+                    
+                </CollectionView.GroupHeaderTemplate>
+                
+                
+            </CollectionView>
+        
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>

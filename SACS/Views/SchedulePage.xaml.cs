@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SACS.ViewModels;
+using SACS.Models;
 
 namespace SACS.Views
 {
@@ -19,6 +20,8 @@ namespace SACS.Views
             InitializeComponent();
             BindingContext = _viewModel = new ScheduleViewModel();
             _viewModel.DisplayError += () => DisplayAlert("Error", _viewModel.Error, "OK");
+            _viewModel.ScheduleNotFound += () => { labelNotFound.IsVisible = true; ScheduleListView.IsVisible = false;};
+            _viewModel.Refresh += () => { labelNotFound.IsVisible = false; ScheduleListView.IsVisible = true;};
             ScheduleListView.ItemsSource = _viewModel.Items;
             ScheduleListView.ItemTemplate = GetDataTemplate();
         }
@@ -36,12 +39,12 @@ namespace SACS.Views
                 result = new DataTemplate(() =>
                 {
                     StackLayout stack = new StackLayout(); 
-                    Label labelStart = new Label { FontAttributes = FontAttributes.Bold }; ;
+                    Label labelStart = new Label { FontAttributes = FontAttributes.Bold}; ;
                     Label labelEnd = new Label();
                     Label labelSubject = new Label { FontAttributes = FontAttributes.Bold }; ;
                     Label labelAuditories = new Label();
                     Label labelEmployee = new Label { HorizontalTextAlignment = TextAlignment.End };
-
+                    
                     labelStart.SetBinding(Label.TextProperty, "Start");
                     labelEnd.SetBinding(Label.TextProperty, "End");
                     labelSubject.SetBinding(Label.TextProperty, "Subject");
@@ -67,14 +70,6 @@ namespace SACS.Views
                     grid.Children.Add(labelAuditories, 1, 1);
                     grid.Children.Add(labelEmployee, 2, 1);
                     stack.Children.Add(grid);
-                    var recognizer = new TapGestureRecognizer
-                    {
-                        BindingContext = _viewModel,
-                        Command = _viewModel.ItemTapped,
-                        NumberOfTapsRequired = 1,
-                        CommandParameter = "."
-                    };
-                    stack.GestureRecognizers.Add(recognizer);
                     stack.Padding = 10;
                     return stack;
                 });
@@ -89,7 +84,7 @@ namespace SACS.Views
                     Label labelSubject = new Label { FontAttributes = FontAttributes.Bold }; ;
                     Label labelAuditories = new Label();
                     Label labelGroups = new Label { HorizontalTextAlignment = TextAlignment.End };
-
+                    
                     labelStart.SetBinding(Label.TextProperty, "Start");
                     labelEnd.SetBinding(Label.TextProperty, "End");
                     labelSubject.SetBinding(Label.TextProperty, "Subject");
@@ -109,20 +104,22 @@ namespace SACS.Views
                         new ColumnDefinition{Width  = new GridLength(100)}
                         }
                     };
+                    grid.SetBinding(Grid.ClassIdProperty, "Id");                    
                     grid.Children.Add(labelStart, 0, 0);
                     grid.Children.Add(labelEnd, 0, 1);
                     grid.Children.Add(labelSubject, 1, 0);
                     grid.Children.Add(labelAuditories, 1, 1);
                     grid.Children.Add(labelGroups, 2, 1);
-                    stack.Children.Add(grid);
                     var recognizer = new TapGestureRecognizer
                     {
-                        BindingContext =_viewModel,
-                        Command = _viewModel.ItemTapped,
-                        NumberOfTapsRequired=1,
-                        CommandParameter = "."                        
+                        NumberOfTapsRequired = 1
                     };
-                    stack.GestureRecognizers.Add(recognizer);
+                    recognizer.Tapped += (s, e) => {
+                        _viewModel.ItemTapped.Execute(_viewModel.Items.Where(x => x.Id == grid.ClassId).FirstOrDefault());
+                    };
+                    grid.GestureRecognizers.Add(recognizer);
+                    stack.Children.Add(grid);
+                    stack.Padding = 10;
                     return stack;
                 });
             }

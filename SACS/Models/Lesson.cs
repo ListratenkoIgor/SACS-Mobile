@@ -16,15 +16,25 @@ namespace SACS.Models
         private string subject { get; set; }
         private string subjectFullName { get; set; }
         private string lessonTypeAbbrev { get; set; }
+        public string Note { get; set; }
         private List<Employee> employees { get; set; }
         private List<Studentgroup> studentGroups { get; set; }
-        public string Auditory { get => auditories[0]; }
+        public string Auditory
+        {
+            get
+            {
+                if ((auditories != null) && (auditories?.Count != 0))
+                    return auditories[0];
+                return "";
+            }
+        }
         public string Start { get => startLessonTime; }
         public string End { get => endLessonTime; }
         public string Subject { get => $"{subject} ({lessonTypeAbbrev})"; }
         public string LessonType { get => $"{lessonTypeAbbrev}"; }
         public string Employee { get => employees[0]?.GetLastNameInitiales(); }
         public string Groups { get => studentGroups.GetGroups(); }
+        public List<string> GetGroupsList() { return studentGroups.GetGroupsList(); }
         public Lesson(string Id, DayShedule map) {
             this.Id = Id;
             this.auditories = map.auditories;

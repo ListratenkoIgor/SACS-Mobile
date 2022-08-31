@@ -11,5 +11,6 @@ namespace SACS.Services
     public interface ISchedule
     {
         Task<List<DayShedule>> LoadSchedule(PhysicalEntity user);
+        Task<int> GetCurrentWeek();
     }
 }

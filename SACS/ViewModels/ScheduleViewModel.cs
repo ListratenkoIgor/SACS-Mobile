@@ -25,10 +25,13 @@ namespace SACS.ViewModels
         public Command<Lesson> ItemTapped { get; }
         public ScheduleViewModel()
         {
-            Title = "Schedule";
+            Title = GetTitle();
             Items = new ObservableCollection<Lesson>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<Lesson>(OnItemSelected);
+        }
+        private string GetTitle() {
+            return $"{DateTime.Today.DayOfWeek} {DateTime.Today.ToString("dd.MM.yyyy")}\nCurrent week:{DependencyService.Get<AppData>().CurrentWeek}";
         }
         async Task ExecuteLoadItemsCommand()
         {
@@ -36,13 +39,18 @@ namespace SACS.ViewModels
             var AppData = DependencyService.Get<AppData>();
             try
             {
+                AppData.CurrentLessons.Clear();
                 Items.Clear();
                 var _service = DependencyService.Get<ISchedule>();
-                var items = await _service.LoadSchedule(AppData.User);
+                var itemsResult = await _service.LoadSchedule(AppData.User);
+                var week = AppData.CurrentWeek;
+                var items = itemsResult.GetTodayLessons(week);
+                if (items.Count==0) ScheduleNotFound();
                 foreach (var item in items)
                 {
                     Items.Add(new Lesson(Guid.NewGuid().ToString(), item));
                 }
+                AppData.CurrentLessons.SetItems(Items.ToList());
             }
             catch (Exception ex)
             {
@@ -78,13 +86,17 @@ namespace SACS.ViewModels
                 return;
 
             // This will push the ItemDetailPage onto the navigation stack
-            //await Shell.Current.GoToAsync($"{nameof(LessonPage)}?{nameof(LessonDetailViewModel.ItemId)}={item.Id}");
-            await Shell.Current.GoToAsync($"{nameof(AboutPage)}");
+            var AppData = DependencyService.Get<AppData>();
+            AppData.CurrentLessons.CurrentItem = item;
+            await Shell.Current.GoToAsync($"{nameof(LessonPage)}?{nameof(LessonViewModel.ItemId)}={item.Id}");
+            //await Shell.Current.GoToAsync($"{nameof(AboutPage)}");
         }
 
 
         public Action DisplayError;
-        public Action ItemClicked;
+        public Action Refresh;
+        //public Action ItemClicked;
+        public Action ScheduleNotFound;
        
         private string error;
         public string Error

@@ -1,4 +1,5 @@
 ﻿using Interfaces.Models;
+using Interfaces.Models.AuthModels;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -14,41 +15,55 @@ namespace SACS.Services
     public class AuthService : IAuth
     {
         /*
+        private string _baseUri = "https://sacs-auth.herokuapp.com";
         public async Task<string> Login(string username, string password)
         {
-            var request = new RestRequest("auth/Account/Login")
-                         .AddHeader("Content-Type", "application/json;charset=utf-8")
-                         .AddHeader("Content-Length", 0)
-                         .AddQueryParameter("username", username)
-                         .AddQueryParameter("password", password);
-            var response = await AppData.RestClient.PostAsync(request);
-            if (response.IsSuccessful)
+            //var request = new RestRequest("auth/Account/Login", Method.Post);
+                         //.AddHeader("Content-Type", "application/json;charset=utf-8")
+                         //.AddHeader("Content-Length", 0)
+                         //.AddQueryParameter("username", username).AddQueryParameter("password", password);
+            var request = new RestRequest("Account/Login", Method.Post);
+            request.RequestFormat = DataFormat.Json;
+            //request.AddBody(new LoginModel { Username=username,Password=password});
+            request.AddBody(new LoginModel { Username="g-danilova",Password="Test2Test2"});
+            //request.AddBody(new LoginModel { Username="85100093",Password="Test1Test1"});
+            var AppData = DependencyService.Get<AppData>();
+            //var response = AppData.RestClient.PostAsync(request);
+            var client = new RestClient(_baseUri);
+            var response = client.ExecuteAsync(request);
+            try
             {
-                string token = response.Content;
-                if (token != null)
+                response.Wait();
+                if (response.Result.IsSuccessful)
                 {
-                    AppData.token = token;
-                    var handler = new JwtSecurityTokenHandler();
-                    var jwtSecurityToken = handler.ReadJwtToken(token);
-                    var user = new PhysicalEntity()
+                    string token = response.Result.Content;
+                    if (token != null)
                     {
-                        FirstName = jwtSecurityToken.Payload["FirstName"].ToString(),
-                        LastName = jwtSecurityToken.Payload["LastName"].ToString(),
-                        MiddleName = jwtSecurityToken.Payload["MiddleName"].ToString(),
-                        isStudent = (bool)jwtSecurityToken.Payload["MiddleName"],
-                        RecordBookNumber = jwtSecurityToken.Payload["RecordBookNumber"].ToString(),
-                        Group = jwtSecurityToken.Payload["Group"].ToString(),
-                        UrlId = jwtSecurityToken.Payload["UrlId"].ToString()
-                    };
-                    AppData.Role = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-                    AppData.User = user;
+                        AppData.token = token;
+                        var handler = new JwtSecurityTokenHandler();
+                        var jwtSecurityToken = handler.ReadJwtToken(token);
+                        var user = new PhysicalEntity()
+                        {
+                            FirstName = jwtSecurityToken.PayloadExist("FirstName").ToString(),
+                            LastName = jwtSecurityToken.PayloadExist("LastName").ToString(),
+                            MiddleName = jwtSecurityToken.PayloadExist("MiddleName").ToString(),
+                            isStudent = (bool)jwtSecurityToken.PayloadExist("isStudent"),
+                            RecordBookNumber = jwtSecurityToken.PayloadExist("RecordBookNumber")?.ToString(),
+                            Group = jwtSecurityToken.PayloadExist("Group")?.ToString(),
+                            UrlId = jwtSecurityToken.PayloadExist("UrlId")?.ToString()
+                        };
+                        AppData.Role = jwtSecurityToken.PayloadExist("role").ToString();
+                        //AppData.Role = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value ;
+                        AppData.User = user;
+                    }
+                    return string.Empty;
                 }
-                return string.Empty;
+                else
+                {
+                    return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}";
+                }
             }
-            else
-            {
-                return $"Error {response.StatusCode}. {response.ErrorMessage}";
-            }
+            catch { return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}"; }
         }
         */
         public async Task<string> Login(string username, string password)
@@ -72,15 +87,18 @@ namespace SACS.Services
                 };
                 AppData.Role = jwtSecurityToken.PayloadExist("role").ToString();
                 //AppData.Role = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value ;
+                user.UrlId = "s-kulikov";
                 AppData.User = user;
+
             }
             return string.Empty;
         }      
         public void Logout()
         {
             var AppData = DependencyService.Get<AppData>();
-            var request = new RestRequest("auth/Account/Logout")
-                         .AddHeader("Authorization", $"Bearer {AppData.token}");
+            var request = new RestRequest("Account/Logout")
+            //var request = new RestRequest("auth/Account/Logout")
+                .AddHeader("Authorization", $"Bearer {AppData.token}");
             AppData.RestClient.GetAsync(request);
             AppData.Clear();
         }

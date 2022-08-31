@@ -42,7 +42,7 @@ namespace SACS.ViewModels
         {
             IsBusy = true;
             var _service = DependencyService.Get<IAuth>();
-            var result = _service.Login(username, password).Result;
+            var result = _service.Login(Username, Password).Result;
             IsBusy = false;
             if (!(result == string.Empty))
             {

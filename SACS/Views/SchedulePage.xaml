@@ -2,17 +2,22 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SACS.Views.SchedulePage"
-             Title="{Binding Title}"
              xmlns:local="clr-namespace:SACS.ViewModels"  
              xmlns:model="clr-namespace:SACS.Models"  
              x:Name="TodaySchedulePage">
+    <Shell.TitleView>
+        <Label FontSize="Small" Text="{Binding Title}"/>
+    </Shell.TitleView>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Unadd" Command="{Binding LoadItemsCommand}" />
         <ToolbarItem Text="Add" Command="{Binding LoadItemsCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <RefreshView x:DataType="local:ScheduleViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-            <CollectionView x:Name="ScheduleListView" SelectionMode="None"/>
+            <StackLayout>
+                <CollectionView x:Name="ScheduleListView" SelectionMode="Single" IsVisible="true"/>
+                <Label x:Name="labelNotFound" Text="There are no lessons today" HorizontalOptions="Center" IsVisible="false" FontAttributes="Bold"/>
+            </StackLayout>
         </RefreshView>
     </ContentPage.Content>
 </ContentPage>

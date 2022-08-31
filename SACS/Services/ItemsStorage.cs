@@ -6,6 +6,7 @@ namespace SACS.Services
 {
     public class ItemsStorage<T>
     {
+        public T CurrentItem{get;set;}
         public ItemsStorage(List<T> items = null)
         {
             Items = items ?? (Items = new List<T>());
@@ -16,7 +17,7 @@ namespace SACS.Services
             return Items ?? (Items = new List<T>());
         }
         public void SetItems(List<T> items) {
-            Items = items;
+            Items = new List<T>(items);
         }
         public void Clear()
         {
